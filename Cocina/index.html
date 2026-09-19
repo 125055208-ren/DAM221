@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Cocina (JavaScript)</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background-color: #f4f4f9; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; }
+        form { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 8px 15px; cursor: pointer; border: none; border-radius: 4px; color: white; }
+        .btn-add { background-color: #28a745; }
+        .btn-edit { background-color: #ffc107; color: black; }
+        .btn-del { background-color: #dc3545; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #333; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1> Gestión de Cocina</h1>
+
+    <!-- Formulario -->
+    <form id="formProducto">
+        <input type="number" id="id" placeholder="ID del producto" required>
+        <input type="text" id="nombre" placeholder="Nombre" required>
+        <input type="number" id="cantidad" placeholder="Cantidad" required>
+        <input type="number" step="0.01" id="precio" placeholder="Precio" required>
+        
+        <button type="button" onclick="agregarProducto()" class="btn-add">Agregar</button>
+        <button type="button" onclick="editarProducto()" class="btn-edit">Editar por ID</button>
+    </form>
+
+    <!-- Tabla -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Cantidad</th>
+                <th>Precio</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody id="tablaProductos"></tbody>
+    </table>
+</div>
+
+<script>
+    
+    let productos = [];
+
+    
+    function agregarProducto() {
+        const id = parseInt(document.getElementById('id').value);
+        const nombre = document.getElementById('nombre').value;
+        const cantidad = parseInt(document.getElementById('cantidad').value);
+        const precio = parseFloat(document.getElementById('precio').value);
+
+        if (!id || !nombre || isNaN(cantidad) || isNaN(precio)) {
+            alert("Por favor completa todos los campos.");
+            return;
+        }
+
+        
+        const nuevoProducto = { id, nombre, cantidad, precio };
+        productos.push(nuevoProducto);
+
+        limpiarFormulario();
+        listarProductos();
+    }
+
+    
+    function listarProductos() {
+        const tabla = document.getElementById('tablaProductos');
+        tabla.innerHTML = '';
+
+        if (productos.length === 0) {
+            tabla.innerHTML = '<tr><td colspan="5" style="text-align:center;">No hay productos registrados.</td></tr>';
+            return;
+        }
+
+        productos.forEach((p) => {
+            tabla.innerHTML += `
+                <tr>
+                    <td>${p.id}</td>
+                    <td>${p.nombre}</td>
+                    <td>${p.cantidad}</td>
+                    <td>$${p.precio.toFixed(2)}</td>
+                    <td>
+                        <button onclick="eliminarProducto(${p.id})" class="btn-del">Eliminar</button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    
+    function editarProducto() {
+        const id = parseInt(document.getElementById('id').value);
+        const producto = productos.find(p => p.id === id);
+
+        if (producto) {
+            producto.nombre = document.getElementById('nombre').value || producto.nombre;
+            producto.cantidad = parseInt(document.getElementById('cantidad').value) || producto.cantidad;
+            producto.precio = parseFloat(document.getElementById('precio').value) || producto.precio;
+            
+            limpiarFormulario();
+            listarProductos();
+        } else {
+            alert("Producto con el ID especificado no encontrado.");
+        }
+    }
+
+    
+    function eliminarProducto(id) {
+        productos = productos.filter(p => p.id !== id);
+        listarProductos();
+    }
+
+    function limpiarFormulario() {
+        document.getElementById('formProducto').reset();
+    }
+
+    
+    listarProductos();
+</script>
+
+</body>
+</html>
