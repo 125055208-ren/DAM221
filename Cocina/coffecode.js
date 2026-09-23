@@ -13,24 +13,22 @@ let productos = [
 
 let carrito = [];
 let pedidos = [];
-let subtotal = 0;
-let iva = 0;
 let total = 0;
-const TASA_IVA = 0.16;
+
 
 function listarProductos() {
     const tabla = document.getElementById("tablaProductos");
     tabla.innerHTML = "";
 
-    productos.forEach(({ id, nombre, precio, tipo }) => {
+    productos.forEach(producto => {
         tabla.innerHTML += `
             <tr>
-                <td>${id}</td>
-                <td>${nombre}</td>
-                <td>$${precio.toFixed(2)}</td>
-                <td>${tipo}</td>
+                <td>${producto.id}</td>
+                <td>${producto.nombre}</td>
+                <td>$${producto.precio.toFixed(2)}</td>
+                <td>${producto.tipo}</td>
                 <td>
-                    <button onclick="eliminarProducto(${id})" class="eliminar">
+                    <button onclick="eliminarProducto(${producto.id})" class="eliminar">
                         Eliminar
                     </button>
                 </td>
@@ -38,6 +36,7 @@ function listarProductos() {
         `;
     });
 }
+
 
 function buscarProducto() {
     const id = Number(document.getElementById("buscarId").value);
@@ -53,15 +52,14 @@ function buscarProducto() {
     tabla.innerHTML = "";
 
     if (producto) {
-        const { id, nombre, precio, tipo } = producto;
         tabla.innerHTML = `
             <tr>
-                <td>${id}</td>
-                <td>${nombre}</td>
-                <td>$${precio.toFixed(2)}</td>
-                <td>${tipo}</td>
+                <td>${producto.id}</td>
+                <td>${producto.nombre}</td>
+                <td>$${producto.precio.toFixed(2)}</td>
+                <td>${producto.tipo}</td>
                 <td>
-                    <button onclick="eliminarProducto(${id})" class="eliminar">
+                    <button onclick="eliminarProducto(${producto.id})" class="eliminar">
                         Eliminar
                     </button>
                 </td>
@@ -71,6 +69,7 @@ function buscarProducto() {
         tabla.innerHTML = `<tr><td colspan="5" style="text-align:center;">Producto no encontrado</td></tr>`;
     }
 }
+
 
 function productosBaratos() {
     const baratos = productos.filter(p => p.precio <= 40);
@@ -83,15 +82,15 @@ function productosBaratos() {
         return;
     }
 
-    baratos.forEach(({ id, nombre, precio, tipo }) => {
+    baratos.forEach(producto => {
         tabla.innerHTML += `
             <tr>
-                <td>${id}</td>
-                <td>${nombre}</td>
-                <td>$${precio.toFixed(2)}</td>
-                <td>${tipo}</td>
+                <td>${producto.id}</td>
+                <td>${producto.nombre}</td>
+                <td>$${producto.precio.toFixed(2)}</td>
+                <td>${producto.tipo}</td>
                 <td>
-                    <button onclick="eliminarProducto(${id})" class="eliminar">
+                    <button onclick="eliminarProducto(${producto.id})" class="eliminar">
                         Eliminar
                     </button>
                 </td>
@@ -99,6 +98,7 @@ function productosBaratos() {
         `;
     });
 }
+
 
 function productosCaros() {
     const caros = productos.filter(p => p.precio > 40);
@@ -111,15 +111,15 @@ function productosCaros() {
         return;
     }
 
-    caros.forEach(({ id, nombre, precio, tipo }) => {
+    caros.forEach(producto => {
         tabla.innerHTML += `
             <tr>
-                <td>${id}</td>
-                <td>${nombre}</td>
-                <td>$${precio.toFixed(2)}</td>
-                <td>${tipo}</td>
+                <td>${producto.id}</td>
+                <td>${producto.nombre}</td>
+                <td>$${producto.precio.toFixed(2)}</td>
+                <td>${producto.tipo}</td>
                 <td>
-                    <button onclick="eliminarProducto(${id})" class="eliminar">
+                    <button onclick="eliminarProducto(${producto.id})" class="eliminar">
                         Eliminar
                     </button>
                 </td>
@@ -127,6 +127,7 @@ function productosCaros() {
         `;
     });
 }
+
 
 function filtrarBebidas() {
     const bebidas = productos.filter(p => p.tipo === "bebida");
@@ -134,15 +135,15 @@ function filtrarBebidas() {
     
     tabla.innerHTML = "";
 
-    bebidas.forEach(({ id, nombre, precio, tipo }) => {
+    bebidas.forEach(producto => {
         tabla.innerHTML += `
             <tr>
-                <td>${id}</td>
-                <td>${nombre}</td>
-                <td>$${precio.toFixed(2)}</td>
-                <td>${tipo}</td>
+                <td>${producto.id}</td>
+                <td>${producto.nombre}</td>
+                <td>$${producto.precio.toFixed(2)}</td>
+                <td>${producto.tipo}</td>
                 <td>
-                    <button onclick="eliminarProducto(${id})" class="eliminar">
+                    <button onclick="eliminarProducto(${producto.id})" class="eliminar">
                         Eliminar
                     </button>
                 </td>
@@ -150,6 +151,7 @@ function filtrarBebidas() {
         `;
     });
 }
+
 
 function filtrarPostres() {
     const postres = productos.filter(p => p.tipo === "postre");
@@ -157,15 +159,15 @@ function filtrarPostres() {
     
     tabla.innerHTML = "";
 
-    postres.forEach(({ id, nombre, precio, tipo }) => {
+    postres.forEach(producto => {
         tabla.innerHTML += `
             <tr>
-                <td>${id}</td>
-                <td>${nombre}</td>
-                <td>$${precio.toFixed(2)}</td>
-                <td>${tipo}</td>
+                <td>${producto.id}</td>
+                <td>${producto.nombre}</td>
+                <td>$${producto.precio.toFixed(2)}</td>
+                <td>${producto.tipo}</td>
                 <td>
-                    <button onclick="eliminarProducto(${id})" class="eliminar">
+                    <button onclick="eliminarProducto(${producto.id})" class="eliminar">
                         Eliminar
                     </button>
                 </td>
@@ -173,6 +175,7 @@ function filtrarPostres() {
         `;
     });
 }
+
 
 function agregarProducto() {
     const id = Number(document.getElementById("id").value);
@@ -185,7 +188,7 @@ function agregarProducto() {
         return;
     }
 
-    const existe = productos.some(producto => producto.id === id);
+    const existe = productos.some(p => p.id === id);
 
     if (existe) {
         alert("Ya existe un producto con ese ID.");
@@ -198,6 +201,7 @@ function agregarProducto() {
     listarProductos();
     cargarMenuCliente();
 }
+
 
 function editarProducto() {
     const id = Number(document.getElementById("id").value);
@@ -223,9 +227,10 @@ function editarProducto() {
     alert("Producto editado correctamente.");
 }
 
+
 function eliminarProducto(id) {
-    productos = productos.filter(producto => producto.id !== id);
-    carrito = carrito.filter(producto => producto.id !== id);
+    productos = productos.filter(p => p.id !== id);
+    carrito = carrito.filter(p => p.id !== id);
 
     calcularTotal();
     mostrarCarrito();
@@ -233,29 +238,19 @@ function eliminarProducto(id) {
     cargarMenuCliente();
 }
 
-function limpiarFormulario() {
-    document.getElementById("id").value = "";
-    document.getElementById("nombre").value = "";
-    document.getElementById("precio").value = "";
-    if (document.getElementById("buscarId")) {
-        document.getElementById("buscarId").value = "";
-    }
-}
 
 function cargarMenuCliente() {
     const menu = document.getElementById("menuCliente");
-    if (!menu) return;
-    
     menu.innerHTML = "";
 
-    productos.forEach(({ id, nombre, precio, tipo }) => {
+    productos.forEach(producto => {
         menu.innerHTML += `
             <div class="producto-card">
-                <h3>${nombre}</h3>
-                <p><i>(${tipo})</i></p>
-                <div class="precio">$${precio.toFixed(2)}</div>
-                <input type="number" id="cantidad-${id}" min="1" value="1" class="cantidad">
-                <button onclick="agregarAlCarrito(${id})">Agregar</button>
+                <h3>${producto.nombre}</h3>
+                <p><i>(${producto.tipo})</i></p>
+                <div class="precio">$${producto.precio.toFixed(2)}</div>
+                <input type="number" id="cantidad-${producto.id}" min="1" value="1" class="cantidad">
+                <button onclick="agregarAlCarrito(${producto.id})">Agregar</button>
             </div>
         `;
     });
@@ -282,8 +277,6 @@ function agregarAlCarrito(id) {
 
 function mostrarCarrito() {
     const carritoHTML = document.getElementById("carrito");
-    if (!carritoHTML) return;
-
     carritoHTML.innerHTML = "";
 
     if (carrito.length === 0) {
@@ -291,19 +284,19 @@ function mostrarCarrito() {
         return;
     }
 
-    carrito.forEach(({ id, nombre, precio, cantidad }) => {
-        const subtotalItem = precio * cantidad;
+    carrito.forEach(producto => {
+        const subtotal = producto.precio * producto.cantidad;
         carritoHTML.innerHTML += `
             <div class="item-carrito">
                 <div>
-                    <strong>${nombre}</strong><br>
-                    $${precio.toFixed(2)} x 
-                    <input type="number" min="1" value="${cantidad}" 
+                    <strong>${producto.nombre}</strong><br>
+                    $${producto.precio.toFixed(2)} x 
+                    <input type="number" min="1" value="${producto.cantidad}" 
                            class="cantidad" style="width:50px;" 
-                           onchange="editarCantidad(${id}, this.value)">
-                    = $${subtotalItem.toFixed(2)}
+                           onchange="editarCantidad(${producto.id}, this.value)">
+                    = $${subtotal.toFixed(2)}
                 </div>
-                <button onclick="eliminarDelCarrito(${id})" class="eliminar">X</button>
+                <button onclick="eliminarDelCarrito(${producto.id})" class="eliminar">X</button>
             </div>
         `;
     });
@@ -330,20 +323,8 @@ function eliminarDelCarrito(id) {
 }
 
 function calcularTotal() {
-    subtotal = carrito.reduce((acumulado, { precio, cantidad }) => {
-        return acumulado + (precio * cantidad);
-    }, 0);
-
-    iva = subtotal * TASA_IVA;
-    total = subtotal + iva;
-
-    const elSubtotal = document.getElementById("subtotal");
-    const elIva = document.getElementById("iva");
-    const elTotal = document.getElementById("total");
-
-    if (elSubtotal) elSubtotal.textContent = subtotal.toFixed(2);
-    if (elIva) elIva.textContent = iva.toFixed(2);
-    if (elTotal) elTotal.textContent = total.toFixed(2);
+    total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+    document.getElementById("total").textContent = total.toFixed(2);
 }
 
 function hacerPedido() {
@@ -355,16 +336,12 @@ function hacerPedido() {
     const nuevoPedido = {
         numero: pedidos.length + 1,
         productos: [...carrito],
-        subtotal: subtotal,
-        iva: iva,
         total: total
     };
 
     pedidos.push(nuevoPedido);
 
     carrito = [];
-    subtotal = 0;
-    iva = 0;
     total = 0;
 
     mostrarCarrito();
@@ -376,8 +353,6 @@ function hacerPedido() {
 
 function listarPedidos() {
     const lista = document.getElementById("listaPedidos");
-    if (!lista) return;
-
     lista.innerHTML = "";
 
     if (pedidos.length === 0) {
@@ -385,62 +360,29 @@ function listarPedidos() {
         return;
     }
 
-    pedidos.forEach(({ numero, productos, subtotal, iva, total }) => {
-        let itemsHTML = productos.map(({ nombre, cantidad, precio }) => 
-            `<p>${nombre} x${cantidad} - $${(precio * cantidad).toFixed(2)}</p>`
+    pedidos.forEach(pedido => {
+        let itemsHTML = pedido.productos.map(p => 
+            `<p>${p.nombre} x${p.cantidad} - $${(p.precio * p.cantidad).toFixed(2)}</p>`
         ).join('');
 
         lista.innerHTML += `
             <div class="pedido-card">
-                <h3>Pedido #${numero}</h3>
+                <h3>Pedido #${pedido.numero}</h3>
                 ${itemsHTML}
-                <p>Subtotal: $${subtotal.toFixed(2)}</p>
-                <p>IVA (16%): $${iva.toFixed(2)}</p>
-                <strong>Total: $${total.toFixed(2)}</strong>
+                <strong>Total: $${pedido.total.toFixed(2)}</strong>
             </div>
         `;
     });
 }
 
-function consultarProductos() {
-    console.log("----- MENÚ DE COFFEE CODE -----");
-    productos.forEach(({ id, nombre, precio, tipo }) => {
-        console.log(`${id}. ${nombre} (${tipo}) - $${precio.toFixed(2)}`);
-    });
+function limpiarFormulario() {
+    document.getElementById("id").value = "";
+    document.getElementById("nombre").value = "";
+    document.getElementById("precio").value = "";
+    document.getElementById("buscarId").value = "";
 }
 
-function listarPedidosConsola() {
-    console.log("----- PEDIDOS -----");
-
-    pedidos.forEach(({ numero, productos, subtotal, iva, total }) => {
-        console.log(`Pedido #${numero}`);
-
-        productos.forEach(({ nombre, cantidad, precio }) => {
-            console.log(`${nombre} x${cantidad} - $${(precio * cantidad).toFixed(2)}`);
-        });
-
-        console.log(`Subtotal: $${subtotal.toFixed(2)}`);
-        console.log(`IVA: $${iva.toFixed(2)}`);
-        console.log(`Total: $${total.toFixed(2)}`);
-    });
-}
-
-function calcularIngresosTotales() {
-    const ingresos = pedidos.reduce((acumulado, { total }) => acumulado + total, 0);
-    console.log(`Ingresos totales: $${ingresos.toFixed(2)}`);
-    return ingresos;
-}
-
-function contarProductosVendidos() {
-    const totalProductos = pedidos.reduce((acumulado, { productos }) => {
-        const cantidadPedido = productos.reduce((subtotalCantidad, { cantidad }) => subtotalCantidad + cantidad, 0);
-        return acumulado + cantidadPedido;
-    }, 0);
-
-    console.log(`Productos vendidos en total: ${totalProductos}`);
-    return totalProductos;
-}
-
+// Inicialización al cargar la página
 listarProductos();
 cargarMenuCliente();
 mostrarCarrito();

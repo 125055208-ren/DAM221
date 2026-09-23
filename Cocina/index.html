@@ -2,131 +2,286 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Gestión de Cocina (JavaScript)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee Code - Sistema Integrado de Cocina y Caja</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 30px; background-color: #f4f4f9; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; }
-        form { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-        input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
-        button { padding: 8px 15px; cursor: pointer; border: none; border-radius: 4px; color: white; }
-        .btn-add { background-color: #28a745; }
-        .btn-edit { background-color: #ffc107; color: black; }
-        .btn-del { background-color: #dc3545; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background-color: #333; color: white; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #f5e6d3;
+            color: #432818;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .main-header {
+            text-align: center;
+            color: #7f3f20;
+            margin-bottom: 25px;
+        }
+
+        .dashboard-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+
+        .seccion {
+            background-color: #fffaf3;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(67, 40, 24, 0.1);
+            border: 1px solid #e2cbca;
+        }
+
+        .seccion h2 {
+            color: #6c4f3d;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f3dfc6;
+            padding-bottom: 8px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        input, select {
+            padding: 10px;
+            border: 1px solid #c9a98c;
+            border-radius: 6px;
+            width: 100%;
+        }
+
+        .filtros-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .filtros-bar button {
+            font-size: 0.85rem;
+            padding: 8px 12px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            grid-column: 1 / -1;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            background-color: #7f3f20;
+            color: white;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        button:hover { background-color: #5e2f18; }
+        .editar { background-color: #d99d00; }
+        .editar:hover { background-color: #b38200; }
+        .eliminar { background-color: #b83232; }
+        .eliminar:hover { background-color: #8c2424; }
+        .confirmar { background-color: #287a3e; width: 100%; margin-top: 10px; }
+        .confirmar:hover { background-color: #1e592d; }
+
+        .table-responsive {
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid #c9a98c;
+            border-radius: 6px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: #6c4f3d;
+            color: white;
+            position: sticky;
+            top: 0;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 12px;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .producto-card {
+            padding: 12px;
+            background-color: #f3dfc6;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .producto-card h3 {
+            font-size: 0.95rem;
+            color: #7f3f20;
+        }
+
+        .producto-card .precio {
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .cantidad { width: 60px; text-align: center; margin-bottom: 5px; }
+
+        .carrito-container, .pedidos-container {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .item-carrito, .pedido-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 8px;
+            background-color: #f3dfc6;
+            border-radius: 6px;
+        }
+
+        .pedido-card {
+            display: block;
+            border-left: 5px solid #287a3e;
+        }
+
+        .total-box {
+            font-size: 1.05rem;
+            text-align: right;
+            padding: 12px;
+            background-color: #e2cbca;
+            border-radius: 6px;
+            line-height: 1.5;
+        }
+
+        .total-box strong {
+            font-size: 1.25rem;
+            color: #432818;
+        }
+
+        .mensaje { text-align: center; color: #888; font-style: italic; padding: 10px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1> Gestión de Cocina</h1>
+    <h1 class="main-header">☕ Coffee Code - Gestión de Cocina y Caja</h1>
 
-    <!-- Formulario -->
-    <form id="formProducto">
-        <input type="number" id="id" placeholder="ID del producto" required>
-        <input type="text" id="nombre" placeholder="Nombre" required>
-        <input type="number" id="cantidad" placeholder="Cantidad" required>
-        <input type="number" step="0.01" id="precio" placeholder="Precio" required>
+    <div class="dashboard-grid">
         
-        <button type="button" onclick="agregarProducto()" class="btn-add">Agregar</button>
-        <button type="button" onclick="editarProducto()" class="btn-edit">Editar por ID</button>
-    </form>
+        <!-- MÓDULO DE COCINA Y ADMINISTRACIÓN -->
+        <div class="column">
+            <div class="seccion">
+                <h2>Cocina: Gestión de Productos</h2>
 
-    <!-- Tabla -->
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Cantidad</th>
-                <th>Precio</th>
-                <th>Acción</th>
-            </tr>
-        </thead>
-        <tbody id="tablaProductos"></tbody>
-    </table>
-</div>
+                <!-- Formulario Agregar / Editar -->
+                <form class="form-grid" onsubmit="event.preventDefault();">
+                    <input type="number" id="id" placeholder="ID">
+                    <input type="text" id="nombre" placeholder="Nombre">
+                    <input type="number" step="0.01" id="precio" placeholder="Precio">
+                    <select id="tipo">
+                        <option value="bebida">Bebida</option>
+                        <option value="postre">Postre</option>
+                    </select>
+                    
+                    <div class="btn-group">
+                        <button type="button" onclick="agregarProducto()">Agregar</button>
+                        <button type="button" onclick="editarProducto()" class="editar">Editar</button>
+                    </div>
+                </form>
 
-<script>
-    
-    let productos = [];
+                <!-- Filtros del Módulo Cocina (filter) -->
+                <div class="filtros-bar">
+                    <button type="button" onclick="listarProductos()">Ver todos</button>
+                    <button type="button" onclick="productosBaratos()">Baratos (≤ $40)</button>
+                    <button type="button" onclick="productosCaros()">Caros (> $40)</button>
+                    <button type="button" onclick="filtrarBebidas()">Bebidas</button>
+                    <button type="button" onclick="filtrarPostres()">Postres</button>
+                </div>
 
-    
-    function agregarProducto() {
-        const id = parseInt(document.getElementById('id').value);
-        const nombre = document.getElementById('nombre').value;
-        const cantidad = parseInt(document.getElementById('cantidad').value);
-        const precio = parseFloat(document.getElementById('precio').value);
+                <!-- Búsqueda por ID con find() -->
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <input type="number" id="buscarId" placeholder="Buscar por ID de producto">
+                    <button type="button" onclick="buscarProducto()">Buscar</button>
+                </div>
 
-        if (!id || !nombre || isNaN(cantidad) || isNaN(precio)) {
-            alert("Por favor completa todos los campos.");
-            return;
-        }
+                <!-- Tabla de Productos -->
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Tipo</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaProductos"></tbody>
+                    </table>
+                </div>
+            </div>
 
-        
-        const nuevoProducto = { id, nombre, cantidad, precio };
-        productos.push(nuevoProducto);
+            <div class="seccion" style="margin-top: 20px;">
+                <h2>Pedidos Realizados</h2>
+                <div id="listaPedidos" class="pedidos-container"></div>
+            </div>
+        </div>
 
-        limpiarFormulario();
-        listarProductos();
-    }
+        <!-- MÓDULO DE ATENCIÓN Y CAJA -->
+        <div class="column">
+            <div class="seccion">
+                <h2>Menú del Cliente</h2>
+                <div id="menuCliente" class="menu-grid"></div>
+            </div>
 
-    
-    function listarProductos() {
-        const tabla = document.getElementById('tablaProductos');
-        tabla.innerHTML = '';
+            <div class="seccion" style="margin-top: 20px;">
+                <h2>Carrito y Caja Registradora</h2>
+                <div id="carrito" class="carrito-container"></div>
+                
+                <!-- Desglose de Caja: Subtotal, IVA y Total -->
+                <div class="total-box">
+                    <p>Subtotal: $<span id="subtotal">0.00</span></p>
+                    <p>IVA (16%): $<span id="iva">0.00</span></p>
+                    <p><strong>Total: $<span id="total">0.00</span></strong></p>
+                </div>
+                
+                <button type="button" onclick="hacerPedido()" class="confirmar">Confirmar Pedido</button>
+            </div>
+        </div>
 
-        if (productos.length === 0) {
-            tabla.innerHTML = '<tr><td colspan="5" style="text-align:center;">No hay productos registrados.</td></tr>';
-            return;
-        }
+    </div>
 
-        productos.forEach((p) => {
-            tabla.innerHTML += `
-                <tr>
-                    <td>${p.id}</td>
-                    <td>${p.nombre}</td>
-                    <td>${p.cantidad}</td>
-                    <td>$${p.precio.toFixed(2)}</td>
-                    <td>
-                        <button onclick="eliminarProducto(${p.id})" class="btn-del">Eliminar</button>
-                    </td>
-                </tr>
-            `;
-        });
-    }
-
-    
-    function editarProducto() {
-        const id = parseInt(document.getElementById('id').value);
-        const producto = productos.find(p => p.id === id);
-
-        if (producto) {
-            producto.nombre = document.getElementById('nombre').value || producto.nombre;
-            producto.cantidad = parseInt(document.getElementById('cantidad').value) || producto.cantidad;
-            producto.precio = parseFloat(document.getElementById('precio').value) || producto.precio;
-            
-            limpiarFormulario();
-            listarProductos();
-        } else {
-            alert("Producto con el ID especificado no encontrado.");
-        }
-    }
-
-    
-    function eliminarProducto(id) {
-        productos = productos.filter(p => p.id !== id);
-        listarProductos();
-    }
-
-    function limpiarFormulario() {
-        document.getElementById('formProducto').reset();
-    }
-
-    
-    listarProductos();
-</script>
-
+    <script src="coffeecode.js"></script>
 </body>
 </html>
