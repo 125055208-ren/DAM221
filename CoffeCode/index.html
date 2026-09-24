@@ -38,6 +38,15 @@
         .total-box { font-size: 1.05rem; text-align: right; padding: 12px; background-color: #e2cbca; border-radius: 6px; line-height: 1.5; }
         .total-box strong { font-size: 1.25rem; color: #432818; }
         .mensaje { text-align: center; color: #888; font-style: italic; padding: 10px; }
+        .estado-cocina {
+    margin-top: 8px;
+    padding: 6px 10px;
+    background-color: #ffffff;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    border: 1px dashed #7f3f20;
+    color: #432818;
+}
     </style>
 </head>
 <body>
@@ -45,11 +54,10 @@
     <h1 class="main-header">Coffee Code</h1>
 
     <div class="dashboard-grid">
-        
-        <!-- COLUMNA IZQUIERDA: MÓDULO DE COCINA Y PEDIDOS -->
+      
         <div class="column">
             <div class="seccion">
-                <h2>Cocina: Gestión de Productos</h2>
+                <h2>Productos</h2>
 
                 <form class="form-grid" onsubmit="event.preventDefault();">
                     <input type="number" id="id" placeholder="ID">
@@ -104,7 +112,7 @@
         <!-- COLUMNA DERECHA: MÓDULO DEL CLIENTE, PROMO Y CARRITO -->
         <div class="column">
             <div class="seccion">
-                <h2>Menú del Cliente (Dinamico)</h2>
+                <h2>Menú</h2>
                 <div id="menuCliente" class="menu-grid"></div>
             </div>
 
