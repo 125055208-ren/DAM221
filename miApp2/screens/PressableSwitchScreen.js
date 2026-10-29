@@ -1,23 +1,85 @@
-import { StyleSheet, Text, View, Button } from 'react-native';
+import {useState} from 'react';
+import { StyleSheet, Text, View, Button,Pressable, Switch } from 'react-native';
 
 export default function PressableSwitchScreen({ onBack }) {
-  return (
+  const [mensaje, setMensaje]= useState('presiona el boton');
+  const [activado, setActivado] = useState(false);
+
+
+   return (
     <View style={styles.container}>
-      <Text style={styles.titulo}>Pressable & Switch</Text>
-      <Text style={styles.equipo}>Equipo: Alvaro David Castro Ortega & Alan Damian Cuapio Serrano</Text>
+      <Text style={styles.titulo}>Pressable</Text>
 
-      <View style={styles.contenido}>
-        <Text>Aquí va el desarrollo del componente Pressable y Switch.</Text>
-      </View>
+        <Text>{mensaje}</Text>
 
-      <Button title="⬅ Regresar al Menú" onPress={onBack} color="#841584" />
+        <Pressable
+
+            onPress={()=> setMensaje('Boton Presionado bro')}
+            onPressIn={() => console.log('inicio de pulsacion bro')}
+            onPressOut={() => console.log('Fin de la pulsacion bro')}
+            onLongPress={() => setMensaje('Pulsacion Prolongada')}
+            disabled = {false}
+            style={({ pressed }) => [
+              styles.boton,
+              pressed && styles.botonPresionado
+            ]}
+
+          >
+            <Text style={styles.textoBoton}>Presioname</Text>
+            </Pressable>
+
+            <View style={styles.separador}/>
+
+            <Text style={styles.titulo}>Switch</Text>
+
+            <Text>
+              Estado : {activado ? 'Activado' : 'Desactivado'}
+            </Text>
+
+            <Switch
+
+              value={activado}
+              onValueChange={setActivado}
+              disabled={false}
+              trackColor={{ false: '#999999', true: '#319b80'}}
+              thumbColor={activado ? '#ffffff' : '#eeeeee'}
+              />
+        
+            
+
     </View>
   );
 }
-
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20, backgroundColor: '#f5f4f4' },
-  titulo: { fontSize: 20, fontWeight: 'bold' },
-  equipo: { fontSize: 13, color: '#666', textAlign: 'center', marginBottom: 20 },
-  contenido: { marginBottom: 20 }
+  container: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#f2f2f2',
+  },
+  titulo: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 15,
+  },
+  boton: {
+    backgroundColor: '#319b80',
+    padding: 15,
+    borderRadius: 10,
+    marginTop: 15,
+  },
+  botonPresionado: {
+    backgroundColor: '#1e6655',
+  },
+  textoBoton: {
+    color: 'white',
+    fontSize: 16,
+  },
+  separador: {
+    height: 2,
+    backgroundColor: '#cccccc',
+    width: '90%',
+    marginVertical: 35,
+  },
 });
